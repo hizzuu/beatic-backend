@@ -1,0 +1,27 @@
+scalar Time
+scalar Upload
+scalar Cursor
+
+directive @constraint(
+  label: String!
+  notEmpty: Boolean
+  notBlank: Boolean
+  pattern: String
+  min: Int
+  max: Int
+) on INPUT_FIELD_DEFINITION | ARGUMENT_DEFINITION
+
+directive @authentication on FIELD_DEFINITION
+
+directive @currentUser on FIELD_DEFINITION
+
+interface Node {
+  id: ID!
+}
+
+extend type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: Cursor
+  endCursor: Cursor
+}

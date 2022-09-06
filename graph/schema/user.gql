@@ -1,0 +1,47 @@
+extend type User implements Node {
+  id: ID!
+  name: String!
+  gender: Gender!
+  birthday: Time!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NONBINARY
+  OTHER
+  NOANSWER
+}
+
+type GetUserPayload {
+  user: User!
+}
+
+type CreateUserPayload {
+  user: User!
+}
+
+type UpdateUserPayload {
+  user: User!
+}
+
+input CreateUserInput {
+  name: String!
+  gender: Gender!
+  birthday: Time!
+}
+
+input UpdateUserInput {
+  name: String!
+  gender: Gender!
+  birthday: Time!
+}
+
+extend type Query {
+  user(id: ID!): GetUserPayload!
+}
+
+extend type Mutation {
+  createUser(input: CreateUserInput!): CreateUserPayload!
+  updateUser(input: UpdateUserInput!): UpdateUserPayload!
+}

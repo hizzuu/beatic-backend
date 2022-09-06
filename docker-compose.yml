@@ -1,0 +1,30 @@
+version: "3"
+services:
+  api:
+    container_name: api
+    build:
+      context: ./build/api
+      target: dev
+    env_file: ./build/api/.env
+    tty: true
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: app_dev
+      TZ: 'Asia/Tokyo'
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+
+networks:
+  default:
+    name: app

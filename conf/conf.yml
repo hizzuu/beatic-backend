@@ -1,0 +1,13 @@
+db:
+  dbms: mysql
+  name: app_dev
+  user: root
+  pass: password
+  net: tcp
+  host: db
+  port: 3306
+  parsetime: true
+  allowNativePasswords: true
+credentials:
+  firebase:
+    secret_key:
