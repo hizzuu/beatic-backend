@@ -34,7 +34,7 @@ jobs:
         run: gcloud auth configure-docker
 
       - name: Build Docker image
-        run: docker build -t asia.gcr.io/$PROJECT_ID/$SERVICE_NAME:${{ github.sha }} .
+        run: docker build --target prod -t asia.gcr.io/$PROJECT_ID/$SERVICE_NAME:${{ github.sha }} -f ./build/api/Dockerfile .
 
       - name: Push Docker Image
         run: docker push asia.gcr.io/$PROJECT_ID/$SERVICE_NAME:${{ github.sha }}
