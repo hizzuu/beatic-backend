@@ -25,12 +25,12 @@ jobs:
         run: docker build --target prod -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/beatic-backend:${{ github.sha }} -f ./build/api/Dockerfile .
 
       - name: Push
-        run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/plate-api:${{ github.sha }}
+        run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/beatic-backend:${{ github.sha }}
 
       - name: deploy
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v0.4.0
         with:
           service: plate-api
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/plate-api:${{ github.sha }}
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/beatic-backend:${{ github.sha }}
           region: asia-northeast1
