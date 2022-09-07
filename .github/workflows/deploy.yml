@@ -31,6 +31,6 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v0.4.0
         with:
-          service: plate-api
+          service: beatic-backend
           image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/beatic-backend:${{ github.sha }}
           region: asia-northeast1
