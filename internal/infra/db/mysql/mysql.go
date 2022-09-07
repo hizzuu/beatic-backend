@@ -3,14 +3,11 @@ package mysql
 import (
 	"context"
 	"database/sql"
-	"time"
 
-	"github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/hizzuu/beatic-backend/conf"
 	"github.com/jmoiron/sqlx"
 )
-
-const txCtxKey = "tx"
 
 type db struct {
 	conn *sqlx.DB
@@ -21,19 +18,14 @@ type DB interface {
 	PrepareContext(ctx context.Context, query string) (*sql.Stmt, error)
 }
 
-func New() (*db, error) {
-	mysqlConf := &mysql.Config{
-		User:                 conf.C.DB.User,
-		Passwd:               conf.C.DB.Pass,
-		Net:                  conf.C.DB.Net,
-		Addr:                 conf.C.DB.Host + ":" + conf.C.DB.Port,
-		DBName:               conf.C.DB.Name,
-		ParseTime:            conf.C.DB.Parsetime,
-		Loc:                  time.Local,
-		AllowNativePasswords: conf.C.DB.AllowNativePasswords,
-	}
+type key string
 
-	conn, err := sqlx.Open(conf.C.DB.Dbms, mysqlConf.FormatDSN())
+const (
+	txCtxKey key = "tx"
+)
+
+func New() (*db, error) {
+	conn, err := sqlx.Open("mysql", conf.C.DB.DSN)
 	if err != nil {
 		return nil, err
 	}
@@ -49,12 +41,18 @@ func (db *db) DoInTx(ctx context.Context, f func(ctx context.Context) (interface
 
 	v, err := f(context.WithValue(ctx, txCtxKey, tx))
 	if err != nil {
-		tx.Rollback()
+		if err := tx.Rollback(); err != nil {
+			return nil, err
+		}
+
 		return nil, err
 	}
 
 	if err := tx.Commit(); err != nil {
-		tx.Rollback()
+		if err := tx.Rollback(); err != nil {
+			return nil, err
+		}
+
 		return nil, err
 	}
 

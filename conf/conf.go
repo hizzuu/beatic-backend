@@ -4,25 +4,21 @@ import (
 	"os"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/spf13/viper"
 )
 
 type config struct {
+	App         *app
 	DB          *db
 	Credentials *credentials
 }
 
+type app struct {
+	Environment string
+}
+
 type db struct {
-	Dbms                 string
-	Name                 string
-	User                 string
-	Pass                 string
-	Net                  string
-	Host                 string
-	Port                 string
-	Parsetime            bool
-	AllowNativePasswords bool
+	DSN string
 }
 
 type credentials struct {
@@ -55,6 +51,4 @@ func init() {
 	if err := viper.Unmarshal(&C); err != nil {
 		panic(err)
 	}
-
-	spew.Dump(C)
 }
