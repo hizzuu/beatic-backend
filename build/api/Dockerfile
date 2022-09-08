@@ -6,9 +6,8 @@ WORKDIR /app
 ENV GO111MODULE on
 ENV CGO_ENABLED 0
 
-RUN apk add --no-cache alpine-sdk git tzdata \
-    && cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
-    && echo "Asia/Tokyo" > /etc/timezone
+RUN apk add tzdata
+ENV TZ=Asia/Tokyo
 
 RUN go install github.com/cespare/reflex@latest
 
@@ -20,10 +19,6 @@ CMD reflex -r '(\.go$|go\.mod)' -s go run ./cmd/api/main.go
 FROM golang:1.18.3-alpine as builder
 
 WORKDIR /src
-
-RUN apk add --no-cache alpine-sdk git tzdata \
-    && cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
-    && echo "Asia/Tokyo" > /etc/timezone
 
 COPY go.mod .
 COPY go.sum .
@@ -40,5 +35,8 @@ WORKDIR /app
 
 COPY --from=builder /src/main .
 COPY conf/conf.yml /app/conf/conf.yml
+
+RUN apk add tzdata
+ENV TZ=Asia/Tokyo
 
 CMD ["./main"]
