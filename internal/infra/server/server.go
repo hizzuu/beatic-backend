@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"log"
 	"net/http"
 
@@ -32,6 +33,15 @@ func tracer(next http.Handler) http.Handler {
 		header := r.Header.Get("X-Cloud-Trace-Context")
 		log.Println("========X-Cloud-Trace-Context=======", header)
 
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(
+			w,
+			r.WithContext(
+				context.WithValue(
+					r.Context(),
+					"trace",
+					header,
+				),
+			),
+		)
 	})
 }

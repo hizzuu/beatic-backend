@@ -2,15 +2,15 @@ package logger
 
 import (
 	"context"
+	"fmt"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 type Logger interface {
-	Info(ctx context.Context, msg string)
 	Infof(ctx context.Context, template string, args ...interface{})
-	Error(ctx context.Context, e error)
+	Errorf(ctx context.Context, template string, args ...interface{})
 }
 
 type logger struct {
@@ -57,19 +57,13 @@ func New() (*logger, error) {
 		return nil, err
 	}
 
-	l.With()
-
 	return &logger{logger: l}, nil
 }
 
-func (l *logger) Info(ctx context.Context, msg string) {
-	l.logger.Sugar().Info(msg)
-}
-
 func (l *logger) Infof(ctx context.Context, template string, args ...interface{}) {
-	l.logger.Sugar().Infof(template, args...)
+	l.logger.Info(fmt.Sprintf(template, args...))
 }
 
-func (l *logger) Error(ctx context.Context, e error) {
-	l.logger.Sugar().Error(e)
+func (l *logger) Errorf(ctx context.Context, templete string, args ...interface{}) {
+	l.logger.Error(fmt.Sprintf(templete, args...))
 }

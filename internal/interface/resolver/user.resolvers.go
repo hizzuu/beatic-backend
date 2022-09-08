@@ -23,7 +23,8 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdateUse
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id int64) (*model.GetUserPayload, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
+	r.logger.Infof(ctx, "get by user query")
+	return nil, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

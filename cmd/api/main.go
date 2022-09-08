@@ -16,6 +16,6 @@ func main() {
 
 	s := server.New()
 
-	l.Info(ctx, "success")
-	l.Error(ctx, s.ListenAndServe())
+	l.Infof(ctx, "success")
+	l.Errorf(ctx, s.ListenAndServe().Error())
 }
