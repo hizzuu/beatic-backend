@@ -9,12 +9,20 @@ import (
 
 type config struct {
 	App         *app
+	Api         *api
 	DB          *db
 	Credentials *credentials
 }
 
 type app struct {
 	Environment string
+	Debug       bool
+}
+
+type api struct {
+	Port string
+	User string
+	Pass string
 }
 
 type db struct {
