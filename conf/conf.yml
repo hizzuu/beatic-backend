@@ -11,3 +11,5 @@ db:
 credentials:
   firebase:
     secret_key:
+  gcp:
+    project_id:

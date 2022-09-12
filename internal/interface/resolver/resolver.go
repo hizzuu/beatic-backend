@@ -9,3 +9,7 @@ import "github.com/hizzuu/beatic-backend/internal/infra/logger"
 type Resolver struct {
 	logger logger.Logger
 }
+
+func New(l logger.Logger) *Resolver {
+	return &Resolver{logger: l}
+}

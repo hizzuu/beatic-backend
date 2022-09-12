@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hizzuu/beatic-backend/conf"
+	"github.com/hizzuu/beatic-backend/graph/model"
+	"github.com/hizzuu/beatic-backend/internal/util/environment"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -61,9 +64,23 @@ func New() (*logger, error) {
 }
 
 func (l *logger) Infof(ctx context.Context, template string, args ...interface{}) {
-	l.logger.Info(fmt.Sprintf(template, args...))
+	l.logger.With(trace(ctx)...).Info(fmt.Sprintf(template, args...))
 }
 
 func (l *logger) Errorf(ctx context.Context, templete string, args ...interface{}) {
 	l.logger.Error(fmt.Sprintf(templete, args...))
+}
+
+func trace(ctx context.Context) []zapcore.Field {
+	if !environment.IsProd() {
+		return nil
+	}
+
+	id := conf.C.Credentials.GCP.ProjectID
+	t, _ := ctx.Value(model.TracerCtxKey).(*model.Trace)
+	return []zapcore.Field{
+		zap.String("logging.googleapis.com/trace", fmt.Sprintf("projects/%s/traces/%s", id, t.TraceID)),
+		zap.String("logging.googleapis.com/spanId", fmt.Sprintf("projects/%s/traces/%s", id, t.SpanID)),
+		zap.String("logging.googleapis.com/trace_sampled", fmt.Sprintf("projects/%s/traces/%t", id, t.Sampled)),
+	}
 }

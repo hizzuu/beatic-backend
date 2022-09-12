@@ -31,10 +31,15 @@ type db struct {
 
 type credentials struct {
 	Firebase *firebase
+	GCP      *gcp
 }
 
 type firebase struct {
 	SecretKey string `mapstructure:"secret_key"`
+}
+
+type gcp struct {
+	ProjectID string `mapstructure:"project_id"`
 }
 
 var C config

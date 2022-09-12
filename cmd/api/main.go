@@ -14,8 +14,6 @@ func main() {
 		panic(err)
 	}
 
-	s := server.New()
-
-	l.Infof(ctx, "success")
+	s := server.New(l)
 	l.Errorf(ctx, s.ListenAndServe().Error())
 }
